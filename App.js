@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { Text, View, ScrollView, Alert, ImageBackground, Dimensions, TextInput, Switch } from 'react-native';
 import { SetVisual, Color_set, wp, hp } from './styles';
 import { Timer } from './packages/timer'
@@ -8,6 +8,9 @@ import { MyButton } from './packages/my_button'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Audio } from 'expo-av'; 
+
+
 
 const Tab = createBottomTabNavigator();
 
@@ -84,13 +87,24 @@ class Limite extends Component {
   render(){
     return(
       <View>
-        <Text style={{color:'black', fontSize:32}}>Hola {Time.limite}</Text>
+        <Text style={{color:'black', fontSize:32}}>Coming soon {Time.limite}</Text>
       </View>
     )
   }
 }
 
 class Time extends Component {
+
+
+
+  playsound = async () =>  {
+    console.log('Loading Sound');
+    const { sound } = await Audio.Sound.createAsync(
+       require('./bell.mp3')
+    );
+    console.log('Playing Sound');
+    await sound.playAsync(); }
+
 
   constructor(){
     super()
@@ -157,9 +171,11 @@ class Time extends Component {
               title:'START',
               paused:false,
             })
-            alert("HAS LLEGADO AL LIMITE ESTABLECIDO.")
 
 
+
+            this.playsound()
+            
             console.log(this.state.segundos_acumulados+" ||" +this.state.milesimas_unidades)
             
           }
@@ -303,12 +319,7 @@ class Time extends Component {
         />
 
         </ImageBackground>
-        <MyButton 
-            color={this.state.color_now_reset}
-            function_passed={this.onReset}
-            OnPlay={this.state.ButtonModePlay}
-            title='GUARDAR'
-            />
+
       </View>
       <View>
       <View style={{marginHorizontal:wp('10'), marginTop:hp('10'), marginLeft:55}}>
