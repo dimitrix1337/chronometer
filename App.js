@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { Text, View, ScrollView, ImageBackground, TouchableHighlight, Dimensions, TextInput, Switch } from 'react-native';
+import { Text, View, ScrollView, Alert, ImageBackground, Dimensions, TextInput, Switch } from 'react-native';
 import { SetVisual, Color_set, wp, hp } from './styles';
 import { Timer } from './packages/timer'
 import { MyButton } from './packages/my_button'
@@ -11,48 +11,52 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 const Tab = createBottomTabNavigator();
 
+var device_width = Dimensions.get('screen').width
+var device_height = Dimensions.get('screen').height
+
+
 export default class Tabs extends Component {
   render(){
     return (
 
     <NavigationContainer>
       <Tab.Navigator
-            initialRouteName="Timer"
-            tabBarOptions={{
-              activeTintColor: 'black',
-              activeBackgroundColor:'gray'
-            }}
-          >
-          <Tab.Screen
-              name="Timer"
-              component={Time}
-              options={{
-                tabBarLabel: 'Time',
-                tabBarIcon: ({ color, size }) => (
-                  <MaterialCommunityIcons name="timer" color={Color_set[0]} size={30} />
-                ),
-              }}
-          />
-          <Tab.Screen
-              name="Rounds"
-              component={Limite}
-              options={{
-                tabBarLabel: 'Rounds',
-                tabBarIcon: ({ color, size }) => (
-                  <MaterialCommunityIcons name="home" color={Color_set[0]} size={30} />
-                ),
-              }}
-          />
-          <Tab.Screen
-              name="Records"
-              component={Records}
-              options={{
-                tabBarLabel: 'Records',
-                tabBarIcon: ({ color, size }) => (
-                  <MaterialCommunityIcons name="home" color={Color_set[0]} size={30} />
-                ),
-              }}
-          />
+        initialRouteName="Timer"
+        tabBarOptions={{
+          activeTintColor: 'black',
+          activeBackgroundColor:Color_set[2]
+        }}
+      >
+        <Tab.Screen
+          name="Timer"
+          component={Time}
+          options={{
+            tabBarLabel: 'Time',
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="timer" color={Color_set[0]} size={25} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Rounds"
+          component={Limite}
+          options={{
+            tabBarLabel: 'Rounds',
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="home" color={Color_set[0]} size={30} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Records"
+          component={Records}
+          options={{
+            tabBarLabel: 'Records',
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="home" color={Color_set[0]} size={30} />
+            ),
+          }}
+        />
       </Tab.Navigator>
       </NavigationContainer>
     );
@@ -60,12 +64,15 @@ export default class Tabs extends Component {
 }
 
 class Records extends Component {
+
+
+
   render(){
     return(
       <View style={SetVisual.records_background}>
           <Text style={{marginHorizontal:wp('30'), marginTop:hp('2'), fontSize:(wp('3')+hp('3'))}}>RECORDS</Text>
               <View style={SetVisual.records_list}>
-                  <View style={SetVisual.each_record}></View>
+
               </View>
       </View>
     )
@@ -106,8 +113,13 @@ class Time extends Component {
       color_font_time:'white',
       actual_height:250,
       actual_width:250,
-      title:'EMPEZAR'
-
+      title:'START',
+      paused:false,
+      profiles:({
+        title:'',
+        minutos:'',
+        segundos:'',
+      })
     }
   }
 
@@ -117,13 +129,7 @@ class Time extends Component {
 
     if (this.state.ButtonModePlay){
       this.setState({
-        color_now_play:'red',
-        title:'PAUSA'
-      })
-    }
-    else{
-      this.setState({
-        color_now_play:'black'
+        title:'STOP'
       })
     }
 
@@ -137,18 +143,19 @@ class Time extends Component {
           {
             clearInterval(this._interval)
             this.setState({
-              color_font_time:'white',
-              ButtonModePlay:true,
-              Online:true,
               segundos_acumulados:0,
-              milesimas_unidades:0,
+              Online:true,
+              milesimas_unidades:-1,
               milesimas_decenas:0,
               segundos_unidades:0,
               segundos_decenas:0,
               minutos_unidades:0,
               minutos_decenas:0,
-              title:'EMPEZAR',
-              color_now_play:'black'
+              ButtonModePlay:true,
+              color_font_time:'white',
+              color_now_play:'black', 
+              title:'START',
+              paused:false,
             })
             alert("HAS LLEGADO AL LIMITE ESTABLECIDO.")
 
@@ -207,7 +214,8 @@ class Time extends Component {
         Online:true,
         ButtonModePlay:true,
         color_font_time:'gray',
-        title:'EMPEZAR'
+        title:'START',
+        paused:true,
       })
     }
 }
@@ -226,7 +234,8 @@ class Time extends Component {
       ButtonModePlay:true,
       color_font_time:'white',
       color_now_play:'black', 
-      title:'EMPEZAR'     
+      title:'START',
+      paused:false,     
 
     })
   }
@@ -255,12 +264,31 @@ class Time extends Component {
 
   }
 
+  onSave = () => {
+    Alert.prompt(
+      'Nombre del perfil'
+    )
+  }
 
   render(){
   return (
     <ScrollView style={SetVisual.container}>
 
       <View style={SetVisual.box_1}>
+        <View style={{marginLeft:-wp('60'), flexDirection:'row', marginTop:hp('3')}}>
+        <MyButton 
+              color={this.state.color_now_play}
+              function_passed={this.onStart}
+              OnPlay={this.state.ButtonModePlay}
+              title={this.state.title}/>
+
+        <MyButton 
+            color={this.state.color_now_reset}
+            function_passed={this.onReset}
+            OnPlay={this.state.ButtonModePlay}
+            title='RESET'
+            />
+        </View>
         <View style={SetVisual.limit_mode_background}>
         <Text style={SetVisual.limit_mode}>Limite : {this.state.isEnabled? "SI" : "NO"}</Text>
         </View>
@@ -275,9 +303,15 @@ class Time extends Component {
         />
 
         </ImageBackground>
+        <MyButton 
+            color={this.state.color_now_reset}
+            function_passed={this.onReset}
+            OnPlay={this.state.ButtonModePlay}
+            title='GUARDAR'
+            />
       </View>
-      <View style={SetVisual.box_3}>
-      <View style={{marginHorizontal:wp('10'), marginTop:hp('10'), marginLeft:25}}>
+      <View>
+      <View style={{marginHorizontal:wp('10'), marginTop:hp('10'), marginLeft:55}}>
             <View style={SetVisual.limit_input}>
                 <TextInput
                 style={{color:'white', textAlign:'center', fontSize:(wp('1.5')+hp('1.5'))}}
@@ -286,48 +320,22 @@ class Time extends Component {
                 placeholderTextColor='white'
                 />
               </View>
-            <View style={{marginLeft:(wp('65')), marginTop:-50}}>
+              <Text style={{color:'white', fontWeight:'bold', marginLeft:wp('15'),margin:15}}> Tiempo limite </Text>
+            <View style={{marginLeft:(wp('63')), marginTop:-90}}>
               <Switch
-              style={{marginTop:15}}
-              trackColor={{ false: "red", true: "red" }}
-              thumbColor={this.state.isEnabled ? "white" : "black"}
+              style={{marginTop:0}}
+              trackColor={{ false: "white", true: 'white' }}
+              thumbColor={this.state.isEnabled ? "white" : '#009688'}
               ios_backgroundColor="black"
               onValueChange={this.Verify}
               value={this.state.isEnabled}
             />
             </View>
-            <Text style={{color:'black', fontWeight:'bold', marginTop:0, marginLeft:wp('67')}}>{this.state.isEnabled? "ON" : "OFF"}</Text>
+            <Text style={{color:'white', fontWeight:'bold', marginTop:5, marginLeft:wp('65')}}>{this.state.isEnabled? "ON" : "OFF"}</Text>
 
       </View>
       </View>
-      <View style={SetVisual.box_2}>
 
-
-        <View style={{marginRight:wp('45'), marginTop:40}}>
-            <MyButton 
-            color={this.state.color_now_play}
-            function_passed={this.onStart}
-            OnPlay={this.state.ButtonModePlay}
-            title={this.state.title}
-
-      />
-      </View>
-
-          <View style={{marginLeft:wp('45'), marginTop:-hp('4')}}>
-              <TouchableHighlight
-                  underlayColor='red'
-                  >
-            <MyButton 
-            color={this.state.color_now_reset}
-            function_passed={this.onReset}
-            OnPlay={this.state.ButtonModePlay}
-            title='ELIMINAR'
-            />
-
-              </TouchableHighlight>
-          </View>
-
-      </View>
       <StatusBar style="auto" />
     </ScrollView>
   );

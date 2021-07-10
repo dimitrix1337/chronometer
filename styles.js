@@ -1,16 +1,17 @@
 import { StyleSheet  } from "react-native";
+import { color } from "react-native-reanimated";
 import {widthPercentageToDP, heightPercentageToDP} from 'react-native-responsive-screen';
 
 export var wp = widthPercentageToDP
 export var hp = heightPercentageToDP
 
-export var Color_set = ['#000807', '#A2A3BB', '#9395D3']
+export var Color_set = ['#161B33', '#0D0C1D', '#474973']
 
 
 export const SetVisual = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor:Color_set[1],
+      backgroundColor:Color_set[0],
       marginTop:0
     },
     box_1:{
@@ -23,7 +24,7 @@ export const SetVisual = StyleSheet.create({
       marginBottom:0
     },
     box_2:{
-      backgroundColor:Color_set[2],
+      backgroundColor:Color_set[0],
       width:wp('100%'),
       height:hp('15%'),
       justifyContent:'flex-start',
@@ -47,7 +48,7 @@ export const SetVisual = StyleSheet.create({
     },
     limit_input:{
       borderRadius:25,
-      backgroundColor:Color_set[0],
+      backgroundColor:Color_set[2],
       width:wp('60'),
       height:wp('15'),
       fontSize:50,
@@ -55,7 +56,8 @@ export const SetVisual = StyleSheet.create({
       justifyContent:'center',
       alignContent:'center',
       color:'white',
-      textAlign:'center'
+      textAlign:'center',
+      marginTop:hp('2')
     },
     circle_back:{
       width:wp('10'),
@@ -68,10 +70,11 @@ export const SetVisual = StyleSheet.create({
       fontWeight:'1000',
       fontFamily:'arial',
       marginLeft:-wp('13'),
-      fontSize:hp('1.2')+wp('1.2')
+      fontSize:hp('1.2')+wp('1.2'),
+      color:'white'
     },
     limit_mode_background:{
-      backgroundColor:'white',
+      backgroundColor:Color_set[2],
       borderRadius:100,
       height:40,
       width:wp('45'),
@@ -85,13 +88,13 @@ export const SetVisual = StyleSheet.create({
       width:wp('100'),
       height:hp('100'),
       flex:1,
-      backgroundColor:'white'
+      backgroundColor:Color_set[0]
     },
     records_list:{
       width:wp('90'),
       height:hp('90'),
       margin:(wp('2')+hp('2')),
-      backgroundColor:'red',
+      backgroundColor:Color_set[1],
       borderRadius:5
     },
     records_title:{
