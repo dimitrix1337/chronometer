@@ -17,8 +17,8 @@ export const MyButton = (props) => {
 
     
     return(
-      <View style={{marginLeft:10, marginTop:hp('7')}}>
         <TouchableHighlight
+        style={{marginLeft:10, marginTop:hp('7')}}
         underlayColor='white'
         onPress={() => {function_passed()}}>
           <ImageBackground
@@ -26,7 +26,6 @@ export const MyButton = (props) => {
           <Text  style={{marginTop:70, marginLeft:10, color:'gray', fontWeight:'bold', fontFamily:'arial', fontSize:(wp('1.2')+hp('1.2'))}}>{title}</Text>
           </ImageBackground>
           </TouchableHighlight>
-          </View>
   )
   
   }

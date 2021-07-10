@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import React, { Component, useEffect } from 'react';
+import React, { Component } from 'react';
 import { Text, View, ScrollView, Alert, ImageBackground, Dimensions, TextInput, Switch } from 'react-native';
 import { SetVisual, Color_set, wp, hp } from './styles';
 import { Timer } from './packages/timer'
@@ -13,9 +13,6 @@ import { Audio } from 'expo-av';
 
 
 const Tab = createBottomTabNavigator();
-
-var device_width = Dimensions.get('screen').width
-var device_height = Dimensions.get('screen').height
 
 
 export default class Tabs extends Component {
@@ -96,7 +93,6 @@ class Limite extends Component {
 class Time extends Component {
 
 
-
   playsound = async () =>  {
     console.log('Loading Sound');
     const { sound } = await Audio.Sound.createAsync(
@@ -133,7 +129,8 @@ class Time extends Component {
         title:'',
         minutos:'',
         segundos:'',
-      })
+      }),
+      set_rounds:0,
     }
   }
 
